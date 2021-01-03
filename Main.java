@@ -12,9 +12,12 @@ class Main {
         Weapon w1 = new Weapon(10);
         Weapon w2 = new Weapon(10);
         Weapon w3 = new Weapon(10);
+        Armour a1 = new Armour(10);
         m1.itens.add(w1);
         m2.itens.add(w2);
         m1.itens.add(w3);
+        m1.itens.add(a1);
+        
 
         while (true) {
             System.out.println();

@@ -34,10 +34,10 @@ class Monster {
     }
 
     public int causeDamage(Monster attacker) {
-        int totalDamage = attacker.getTotalDamage() - this.armour;
+        int totalDamage = attacker.getTotalDamage() - this.getTotalArmour();
         String weapons = attacker.getWeaponsNames();
 
-        if (damage < 0) damage = 0;
+        if (totalDamage < 0) totalDamage = 0;
         if (attacker.life <= 0) {
             System.out.println(attacker.name + " is dead, can not attack!");
             System.out.println(this.name + " life: " + this.life);
@@ -47,11 +47,20 @@ class Monster {
             System.out.println(this.name + " life: " + this.life);
         }
         else if (this.life > 0 && attacker.life > 0) {
-            this.life -= damage;
+            this.life -= totalDamage;
             System.out.println(attacker.name + " [" + weapons + "] -> " + this.name + ": " + totalDamage);
             System.out.println(this.name + " life: " + this.life);
         }
-        return damage;
+        return totalDamage;
+    }
+
+    int getTotalArmour () {
+        int totalArmour = this.armour;
+        for (Item item : this.itens) {
+            boolean isArmour = item.getClass().getName().equals("Armour");
+            totalArmour += isArmour ? ((Armour) item).value : 0;
+        }
+        return totalArmour;
     }
 
     int getTotalDamage () {
@@ -68,6 +77,14 @@ class Monster {
         for (Item item : this.itens) {
             boolean isWeapon = item.getClass().getName().equals("Weapon");
             weapons += isWeapon ? (weapons.isEmpty() ? "" : ",") + item.name : "";
+        }
+        return weapons;
+    }
+
+    String getItemsNames () {
+        String weapons = "";
+        for (Item item : this.itens) {
+            weapons += weapons.isEmpty() ? "" : "," + item.name;
         }
         return weapons;
     }
@@ -90,7 +107,7 @@ class Monster {
 
     @Override
     public String toString () {
-        String text = "Name: " + this.name + " (" + this.life + " + " + this.armour + ")\n";
+        String text = "Name: " + this.name + " (" + this.life + " + " + this.getTotalArmour() + ")\n";
         text += "Damage: " + this.damage + " (" + this.getTotalDamage() + " | " + this.speed + "x)\n";
         text += "Weapons: " + this.getWeaponsNames();
         return text;
