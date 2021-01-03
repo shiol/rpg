@@ -1,6 +1,10 @@
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 class Monster {
     int armour;
@@ -63,13 +67,29 @@ class Monster {
         String weapons = "";
         for (Item item : this.itens) {
             boolean isWeapon = item.getClass().getName().equals("Weapon");
-            weapons += isWeapon ? (weapons.isEmpty() ? "" : ";") + item.name : "";
+            weapons += isWeapon ? (weapons.isEmpty() ? "" : ",") + item.name : "";
         }
         return weapons;
     }
 
+    public JSONObject getJson () {
+        JSONObject monster = new JSONObject();
+        JSONArray itens = new JSONArray();
+        monster.put("name", this.name);
+        monster.put("life", this.life);
+        monster.put("armour", this.armour);
+        monster.put("damage", this.damage);
+        monster.put("totalDamage", this.getTotalDamage());
+        monster.put("speed", this.speed);
+        for (Item item : this.itens) {
+            itens.put(item.name);
+        }
+        monster.put("itens", itens);
+        return monster;
+    }
+
     @Override
-    public String toString() {
+    public String toString () {
         String text = "Name: " + this.name + " (" + this.life + " + " + this.armour + ")\n";
         text += "Damage: " + this.damage + " (" + this.getTotalDamage() + " | " + this.speed + "x)\n";
         text += "Weapons: " + this.getWeaponsNames();

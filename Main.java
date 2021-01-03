@@ -1,5 +1,6 @@
-import java.util.Random;
 import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 class Main {
     
@@ -8,7 +9,6 @@ class Main {
         Monster m1 = new Monster(10, 50, 1500, 20);
         Monster m2 = new Monster(10, 50, 1500, 20);
         Scanner s = new Scanner(System.in);
-        Random r = new Random();
         Weapon w1 = new Weapon(10);
         Weapon w2 = new Weapon(10);
         Weapon w3 = new Weapon(10);
@@ -32,8 +32,17 @@ class Main {
                 System.out.println();
                 System.out.println(m2);
             }
+            else if (c.toLowerCase().equals("j")) {
+                System.out.print("Monster 1: ");
+                System.out.println(m1.getJson().toString());
+                System.out.print("Monster 2: ");
+                System.out.println(m2.getJson().toString());
+            }
             else if (c.toLowerCase().equals("d")) {
-                System.out.println("Dice: " + (r.nextInt(10) + 1));
+                System.out.println("Dice: " + Dice.getDice(10));
+            }
+            else if (c.toLowerCase().equals("dd")) {
+                System.out.println("Dices: " + Dice.getDiceText(10, 4));
             }
             else if (c.toLowerCase().equals("exit") || c.toLowerCase().equals("quit")) {
                 break;
