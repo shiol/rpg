@@ -1,18 +1,16 @@
 import java.util.Scanner;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 class Main {
     
     public static void main (String args[]) {
 
-        Monster m1 = new Monster(10, 50, 1500, 20);
-        Monster m2 = new Monster(10, 50, 1500, 20);
+        Monster m1 = new Monster(10, 50, 1500, 20, "");
+        Monster m2 = new Monster(10, 50, 1500, 20, "");
         Scanner s = new Scanner(System.in);
-        Weapon w1 = new Weapon(10);
-        Weapon w2 = new Weapon(10);
-        Weapon w3 = new Weapon(10);
-        Armour a1 = new Armour(10);
+        Weapon w1 = new Weapon(10, "");
+        Weapon w2 = new Weapon(10, "");
+        Weapon w3 = new Weapon(10, "");
+        Armor a1 = new Armor(10, "");
         m1.itens.add(w1);
         m2.itens.add(w2);
         m1.itens.add(w3);

@@ -1,4 +1,3 @@
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,24 +12,25 @@ class Monster {
     int speed;
     String name;
     List<Item> itens;
+    Weapon [] weapons;
+    Helmet helmet;
+    ChestArmor armorChest;
+    Belt armorWaist;
+    Pants armorLegs;
+    Pauldrons pauldrons;
+    Bracers bracers;
+    Gloves gloves;
+    Boots boots;
 
-    public Monster(int armour, int damage, int life, int speed) {
+    public Monster(int armour, int damage, int life, int speed, String name) {
         Random r = new Random();
         this.armour = r.nextInt(armour) + 1;
         this.damage = r.nextInt(damage) + 1;
         this.life = r.nextInt(life) + 1;
         this.speed = r.nextInt(speed) + 1;
-        this.name = RandomName.get();
+        this.name = name.isEmpty() ? RandomName.get() : name;
         itens = new ArrayList<Item>();
-    }
-
-    public Monster(int armour, int damage, int life, int speed, String name) {
-        this.armour = armour;
-        this.damage = damage;
-        this.life = life;
-        this.speed = speed;
-        this.name = name;
-        itens = new ArrayList<Item>();
+        this.weapons = new Weapon[2];
     }
 
     public int causeDamage(Monster attacker) {
@@ -58,7 +58,7 @@ class Monster {
         int totalArmour = this.armour;
         for (Item item : this.itens) {
             boolean isArmour = item.getClass().getName().equals("Armour");
-            totalArmour += isArmour ? ((Armour) item).value : 0;
+            totalArmour += isArmour ? ((Armor) item).value : 0;
         }
         return totalArmour;
     }
