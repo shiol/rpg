@@ -1,8 +1,9 @@
 class Armor extends Item {
-    int value;
-    
-    public Armor(int value, String name) {
-        this.value = value;
-        this.name = name.isEmpty() ? RandomName.get() : name;
+
+    ArmorType armorType;
+
+    public Armor(int armor, String name) {
+        this.armor = armor;
+        this.name = name.isBlank() ? RandomName.get() : name;
     }
 }
