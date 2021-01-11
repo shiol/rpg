@@ -7,7 +7,9 @@ class Item {
     /**
      * List of special properties.
      * <p>
-     * Even index represent the kind of value: d = damage, a = armour
+     * Even index represent the kind of value:
+     * <p>
+     * d = damage, a = armour, pd = percentual damage, pa = percentual armor
      * <p>
      * Odd index represent the value.
      * <p>
@@ -19,7 +21,7 @@ class Item {
      **/
     String[] special;
 
-    public int getDamage() {
+    public int getDamage(int baseDamage) {
         if (special.length == 0) {
             return this.damage;
         } else {
@@ -27,13 +29,15 @@ class Item {
             for (int i = 0; i < special.length; i++) {
                 if (i % 2 == 0 && special[i].equals("d")) {
                     temp += Integer.parseInt(special[i + 1]);
+                } else if (i % 2 == 0 && special[i].equals("pd")) {
+                    temp += Double.parseDouble(special[i + 1]) * baseDamage;
                 }
             }
             return temp;
         }
     }
 
-    public int getArmor() {
+    public int getArmor(int baseArmor) {
         if (special.length == 0) {
             return this.armor;
         } else {
@@ -41,6 +45,8 @@ class Item {
             for (int i = 0; i < special.length; i++) {
                 if (i % 2 == 0 && special[i].equals("a")) {
                     temp += Integer.parseInt(special[i + 1]);
+                } else if (i % 2 == 0 && special[i].equals("pa")) {
+                    temp += Double.parseDouble(special[i + 1]) * baseArmor;
                 }
             }
             return temp;

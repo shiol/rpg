@@ -4,6 +4,6 @@ class Weapon extends Item {
 
     public Weapon(int damage, String name) {
         this.damage = damage;
-        this.name = name.isBlank() ? RandomName.get() : name;
+        this.name = name.isBlank() ? Util.getRandomName() : name;
     }
 }

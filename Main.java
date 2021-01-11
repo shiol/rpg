@@ -36,11 +36,13 @@ class Main {
                 System.out.print("Monster 2: ");
                 System.out.println(m2.getJson().toString());
             } else if (c.toLowerCase().equals("d")) {
-                System.out.println("Dice: " + Dice.getDice(10));
+                System.out.println("Dice: " + Util.getDice(10));
             } else if (c.toLowerCase().equals("dd")) {
-                System.out.println("Dices: " + Dice.getDiceText(10, 4));
+                System.out.println("Dices: " + Util.getDiceText(10, 4));
             } else if (c.toLowerCase().equals("exit") || c.toLowerCase().equals("quit")) {
                 break;
+            } else if (c.toLowerCase().equals("n")) {
+                System.out.println("Random name: " + Util.getRandomName());
             } else {
                 System.out.println("Nothing to do!");
             }

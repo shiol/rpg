@@ -4,6 +4,6 @@ class Armor extends Item {
 
     public Armor(int armor, String name) {
         this.armor = armor;
-        this.name = name.isBlank() ? RandomName.get() : name;
+        this.name = name.isBlank() ? Util.getRandomName() : name;
     }
 }

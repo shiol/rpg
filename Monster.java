@@ -22,7 +22,7 @@ class Monster {
         this.damage = r.nextInt(damage) + 1;
         this.life = r.nextInt(life) + 1;
         this.speed = r.nextInt(speed) + 1;
-        this.name = name.isBlank() ? RandomName.get() : name;
+        this.name = name.isBlank() ? Util.getRandomName() : name;
         this.itens = new ArrayList<>();
         this.armors = new ArrayList<>();
         this.weapons = new ArrayList<>();
@@ -51,10 +51,10 @@ class Monster {
     int getTotalArmour() {
         int totalArmor = this.armor;
         for (Item item : this.armors) {
-            totalArmor += item.getArmor();
+            totalArmor += item.getArmor(this.armor);
         }
         for (Item item : this.weapons) {
-            totalArmor += item.getArmor();
+            totalArmor += item.getArmor(this.armor);
         }
         return totalArmor;
     }
@@ -62,19 +62,24 @@ class Monster {
     int getTotalDamage() {
         int totalDamage = this.damage;
         for (Item item : this.armors) {
-            totalDamage += item.getDamage();
+            totalDamage += item.getDamage(this.damage);
         }
         for (Item item : this.weapons) {
-            totalDamage += item.getDamage();
+            totalDamage += item.getDamage(this.damage);
         }
         return totalDamage;
     }
 
-    boolean equip(Item item) {
+    boolean getItem(Item item) {
+        return this.itens.add(item);
+    }
+
+    boolean equipItem(Item item) {
         boolean isArmor = item.getClass().getName().equals("Armor");
         if (isArmor) {
+            Armor a = (Armor) item;
             for (Armor armor : this.armors) {
-                if (((Armor) item).armorType == armor.armorType) {
+                if (a.armorType == armor.armorType) {
                     return false;
                 }
             }
@@ -84,6 +89,16 @@ class Monster {
             Weapon i = (Weapon) item;
             if ((i.weaponType == WeaponType.Bow || i.weaponType == WeaponType.CrossBow)
                     && this.monsterType != MonsterType.Archer) {
+                return false;
+            } else if ((i.weaponType == WeaponType.HeavyAxe || i.weaponType == WeaponType.HeavySword
+                    || i.weaponType == WeaponType.HeavyMace || i.weaponType == WeaponType.HeavyFlail)
+                    && this.monsterType != MonsterType.Warrior) {
+                return false;
+            } else if ((i.weaponType == WeaponType.Staff || i.weaponType == WeaponType.Wand)
+                    && this.monsterType != MonsterType.Mage) {
+                return false;
+            } else if ((i.weaponType == WeaponType.Claws || i.weaponType == WeaponType.Shuriken)
+                    && this.monsterType != MonsterType.Ninja) {
                 return false;
             }
             this.weapons.add(i);
