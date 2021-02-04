@@ -4,11 +4,11 @@ class Protection {
     String name;
     String description;
     int value;
-    ProtectionType type;
+    ActionType type;
 
     public Protection() {
         this.name = Util.getRandomName();
         this.value = new Random().nextInt(10);
-        type = ProtectionType.Fisical;
+        type = ActionType.Fisical;
     }
 }

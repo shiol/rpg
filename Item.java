@@ -22,11 +22,11 @@ class Item {
         return temp;
     }
 
-    public int getDamage(DamageType type) {
+    public int getDamage(ActionType type) {
         int temp = 0;
         for (Damage damage : damages) {
             if (damage.type == type) {
-                temp += damage.value;
+            temp += damage.value;
             }
         }
         return temp;
@@ -40,7 +40,7 @@ class Item {
         return temp;
     }
 
-    public int getProtection(ProtectionType type) {
+    public int getProtection(ActionType type) {
         int temp = 0;
         for (Protection protection : protections) {
             if (protection.type == type) {

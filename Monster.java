@@ -61,7 +61,7 @@ class Monster {
         return temp;
     }
 
-    int getTotalProtection(ProtectionType type) {
+    int getTotalProtection(ActionType type) {
         int temp = this.protection;
         for (Item item : this.armors) {
             temp += item.getProtection(type);
@@ -83,7 +83,7 @@ class Monster {
         return temp;
     }
 
-    int getTotalDamage(DamageType type) {
+    int getTotalDamage(ActionType type) {
         int temp = this.damage;
         for (Item item : this.armors) {
             temp += item.getDamage(type);

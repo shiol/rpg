@@ -1,3 +1,3 @@
-enum DamageType {
+enum ActionType {
     Ice, Fire, Fisical, Magical, Poison;
 }
