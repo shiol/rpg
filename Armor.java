@@ -6,14 +6,14 @@ class Armor extends Item {
         super();
         Protection basic = new Protection();
         basic.name = "basic";
-        this.protections[0] = basic;
+        this.protections.add(basic);
     }
 
     public Armor(ArmorType type) {
         super();
         Protection basic = new Protection();
         basic.name = "basic";
-        this.protections[0] = basic;
+        this.protections.add(basic);
         this.type = type;
     }
 }

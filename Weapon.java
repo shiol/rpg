@@ -5,14 +5,14 @@ class Weapon extends Item {
         super();
         Damage basic = new Damage();
         basic.name = "basic";
-        this.damages[0] = basic;
+        this.damages.add(basic);
     }
 
     public Weapon(WeaponType type) {
         super();
         Damage basic = new Damage();
         basic.name = "basic";
-        this.damages[0] = basic;
+        this.damages.add(basic);
         this.type = type;
     }
 }

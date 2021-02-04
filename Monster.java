@@ -184,28 +184,28 @@ class Monster {
     }
 
     public JSONObject getJson() {
-        JSONObject monster = new JSONObject();
+        JSONObject json = new JSONObject();
         JSONArray armors = new JSONArray();
         JSONArray weapons = new JSONArray();
         JSONArray itens = new JSONArray();
-        monster.put("name", this.name);
-        monster.put("life", this.life);
-        monster.put("totalProtection", this.getTotalProtection());
-        monster.put("totalDamage", this.getTotalDamage());
-        monster.put("speed", this.speed);
+        json.put("name", this.name);
+        json.put("life", this.life);
+        json.put("totalProtection", this.getTotalProtection());
+        json.put("totalDamage", this.getTotalDamage());
+        json.put("speed", this.speed);
         for (Item item : this.items) {
-            itens.put(item.name);
+            itens.put(item.getJson());
         }
-        for (Item item : this.armors) {
-            armors.put(item.name);
+        for (Armor item : this.armors) {
+            armors.put(item.getJson());
         }
-        for (Item item : this.weapons) {
-            weapons.put(item.name);
+        for (Weapon item : this.weapons) {
+            weapons.put(item.getJson());
         }
-        monster.put("itens", itens);
-        monster.put("armors", armors);
-        monster.put("weapons", weapons);
-        return monster;
+        json.put("itens", itens);
+        json.put("armors", armors);
+        json.put("weapons", weapons);
+        return json;
     }
 
     @Override
