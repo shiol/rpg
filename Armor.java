@@ -1,5 +1,6 @@
 class Armor extends Item {
     ArmorType type;
+    MonsterType typeClass;
 
     public Armor() {
         super();

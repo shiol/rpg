@@ -1,3 +1,3 @@
 enum MonsterType {
-    Archer, Mage, Ninja, Warrior;
+    Archer, Mage, Ninja, Warrior, Undefined;
 }

@@ -11,6 +11,7 @@ class Monster {
     int speed;
     int damage;
     int protection;
+    int itemsCapacity;
     MonsterType type;
     List<Item> items;
     List<Weapon> weapons;
@@ -23,13 +24,14 @@ class Monster {
         this.speed = r.nextInt(10) + 1;
         this.damage = r.nextInt(10) + 1;
         this.protection = r.nextInt(10) + 1;
+        this.itemsCapacity = 10;
         this.items = new ArrayList<>();
         this.armors = new ArrayList<>();
         this.weapons = new ArrayList<>();
     }
 
     public int causeDamage(Monster attacker) {
-        int totalDamage = attacker.getTotalDamage() - this.getTotalArmour();
+        int totalDamage = attacker.getTotalDamage() - this.getTotalProtection();
         String weapons = attacker.getWeaponsNames();
 
         if (totalDamage < 0)
@@ -48,24 +50,24 @@ class Monster {
         return totalDamage;
     }
 
-    int getTotalArmour() {
+    int getTotalProtection() {
         int temp = this.protection;
         for (Item item : this.armors) {
-            temp += item.getArmor();
+            temp += item.getProtection();
         }
         for (Item item : this.weapons) {
-            temp += item.getArmor();
+            temp += item.getProtection();
         }
         return temp;
     }
 
-    int getTotalArmour(ProtectionType type) {
+    int getTotalProtection(ProtectionType type) {
         int temp = this.protection;
         for (Item item : this.armors) {
-            temp += item.getArmor(type);
+            temp += item.getProtection(type);
         }
         for (Item item : this.weapons) {
-            temp += item.getArmor(type);
+            temp += item.getProtection(type);
         }
         return temp;
     }
@@ -92,40 +94,69 @@ class Monster {
         return temp;
     }
 
+    int getActualCapacity() {
+        int temp = 0;
+        for (Item item : this.items) {
+            temp += item.size;
+        }
+        return temp;
+    }
+
     boolean getItem(Item item) {
-        return this.items.add(item);
+        if (this.itemsCapacity - this.getActualCapacity() >= item.size)
+            return this.items.add(item);
+        else
+            return false;
+    }
+
+    boolean isArmor(Item item) {
+        return item.getClass().getName().equals("Armor");
+    }
+
+    boolean isWeapon(Item item) {
+        return item.getClass().getName().equals("Weapon");
+    }
+
+    boolean canEquipArmor(Item item) {
+        if (!isArmor(item))
+            return false;
+        Armor a = (Armor) item;
+        if (a.typeClass != this.type)
+            return false;
+        for (Armor armor : this.armors) {
+            if (a.type == armor.type) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean canEquipWeapon(Item item) {
+        if (!isWeapon(item))
+            return false;
+        Weapon i = (Weapon) item;
+        if ((i.type == WeaponType.Bow || i.type == WeaponType.CrossBow) && this.type != MonsterType.Archer) {
+            return false;
+        } else if ((i.type == WeaponType.HeavyAxe || i.type == WeaponType.HeavySword || i.type == WeaponType.HeavyMace
+                || i.type == WeaponType.HeavyFlail) && this.type != MonsterType.Warrior) {
+            return false;
+        } else if ((i.type == WeaponType.Staff || i.type == WeaponType.Wand) && this.type != MonsterType.Mage) {
+            return false;
+        } else if ((i.type == WeaponType.Claws || i.type == WeaponType.Shuriken || i.type == WeaponType.Katana)
+                && this.type != MonsterType.Ninja) {
+            return false;
+        }
+        return true;
     }
 
     boolean equipItem(Item item) {
-        boolean isArmor = item.getClass().getName().equals("Armor");
-        if (isArmor) {
-            Armor a = (Armor) item;
-            for (Armor armor : this.armors) {
-                if (a.type == armor.type) {
-                    return false;
-                }
-            }
-            this.armors.add((Armor) item);
-            return true;
-        } else {
-            Weapon i = (Weapon) item;
-            if ((i.type == WeaponType.Bow || i.type == WeaponType.CrossBow)
-                    && this.type != MonsterType.Archer) {
-                return false;
-            } else if ((i.type == WeaponType.HeavyAxe || i.type == WeaponType.HeavySword
-                    || i.type == WeaponType.HeavyMace || i.type == WeaponType.HeavyFlail)
-                    && this.type != MonsterType.Warrior) {
-                return false;
-            } else if ((i.type == WeaponType.Staff || i.type == WeaponType.Wand)
-                    && this.type != MonsterType.Mage) {
-                return false;
-            } else if ((i.type == WeaponType.Claws || i.type == WeaponType.Shuriken)
-                    && this.type != MonsterType.Ninja) {
-                return false;
-            }
-            this.weapons.add(i);
-            return true;
+        if (this.items.removeIf(n -> n.id == item.id)) {
+            if (this.canEquipArmor(item))
+                return this.armors.add((Armor) item);
+            else if (this.canEquipWeapon(item))
+                return this.weapons.add((Weapon) item);
         }
+        return false;
     }
 
     String getArmorsNames() {
@@ -159,7 +190,7 @@ class Monster {
         JSONArray itens = new JSONArray();
         monster.put("name", this.name);
         monster.put("life", this.life);
-        monster.put("totalProtection", this.getTotalArmour());
+        monster.put("totalProtection", this.getTotalProtection());
         monster.put("totalDamage", this.getTotalDamage());
         monster.put("speed", this.speed);
         for (Item item : this.items) {
@@ -179,9 +210,11 @@ class Monster {
 
     @Override
     public String toString() {
-        String text = "Name: " + this.name + " (" + this.life + " + " + this.getTotalArmour() + ")\n";
+        String text = "Name: " + this.name + " (" + this.life + " + " + this.getTotalProtection() + ")\n";
         text += "Damage: " + this.getTotalDamage() + " | " + this.speed + "x\n";
-        text += "Weapons: " + this.getWeaponsNames();
+        text += "Armors: " + this.getArmorsNames() + "\n";
+        text += "Weapons: " + this.getWeaponsNames() + "\n";
+        text += "Items: " + this.getItemsNames();
         return text;
     }
 }
