@@ -1,9 +1,18 @@
 class Armor extends Item {
+    ArmorType type;
 
-    ArmorType armorType;
+    public Armor() {
+        super();
+        Protection basic = new Protection();
+        basic.name = "basic";
+        this.protections[0] = basic;
+    }
 
-    public Armor(int armor, String name) {
-        this.armor = armor;
-        this.name = name.isBlank() ? Util.getRandomName() : name;
+    public Armor(ArmorType type) {
+        super();
+        Protection basic = new Protection();
+        basic.name = "basic";
+        this.protections[0] = basic;
+        this.type = type;
     }
 }

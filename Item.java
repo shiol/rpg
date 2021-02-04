@@ -1,55 +1,49 @@
 class Item {
-    int armor;
-    int damage;
     String name;
     String description;
+    Damage[] damages;
+    Protection[] protections;
+    int size;
 
-    /**
-     * List of special properties.
-     * <p>
-     * Even index represent the kind of value:
-     * <p>
-     * d = damage, a = armour, pd = percentual damage, pa = percentual armor
-     * <p>
-     * Odd index represent the value.
-     * <p>
-     * ["d", "10", "a", "5"]
-     * <p>
-     * Extra damage: 10
-     * <p>
-     * Extra armour: 5
-     **/
-    String[] special;
-
-    public int getDamage(int baseDamage) {
-        if (special.length == 0) {
-            return this.damage;
-        } else {
-            int temp = this.damage;
-            for (int i = 0; i < special.length; i++) {
-                if (i % 2 == 0 && special[i].equals("d")) {
-                    temp += Integer.parseInt(special[i + 1]);
-                } else if (i % 2 == 0 && special[i].equals("pd")) {
-                    temp += Double.parseDouble(special[i + 1]) * baseDamage;
-                }
-            }
-            return temp;
-        }
+    public Item() {
+        name = Util.getRandomName();
+        this.damages = new Damage[10];
+        this.protections = new Protection[10];
     }
 
-    public int getArmor(int baseArmor) {
-        if (special.length == 0) {
-            return this.armor;
-        } else {
-            int temp = this.armor;
-            for (int i = 0; i < special.length; i++) {
-                if (i % 2 == 0 && special[i].equals("a")) {
-                    temp += Integer.parseInt(special[i + 1]);
-                } else if (i % 2 == 0 && special[i].equals("pa")) {
-                    temp += Double.parseDouble(special[i + 1]) * baseArmor;
-                }
-            }
-            return temp;
+    public int getDamage() {
+        int temp = 0;
+        for (Damage damage : damages) {
+            temp += damage.value;
         }
+        return temp;
+    }
+
+    public int getDamage(DamageType type) {
+        int temp = 0;
+        for (Damage damage : damages) {
+            if (damage.type == type) {
+                temp += damage.value;
+            }
+        }
+        return temp;
+    }
+
+    public int getArmor() {
+        int temp = 0;
+        for (Protection protection : protections) {
+            temp += protection.value;
+        }
+        return temp;
+    }
+
+    public int getArmor(ProtectionType type) {
+        int temp = 0;
+        for (Protection protection : protections) {
+            if (protection.type == type) {
+                temp += protection.value;
+            }
+        }
+        return temp;
     }
 }

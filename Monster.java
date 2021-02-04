@@ -6,24 +6,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 class Monster {
-    int armor;
-    int damage;
+    String name;
     int life;
     int speed;
-    String name;
-    MonsterType monsterType;
-    List<Item> itens;
+    int damage;
+    int protection;
+    MonsterType type;
+    List<Item> items;
     List<Weapon> weapons;
     List<Armor> armors;
 
-    public Monster(int armour, int damage, int life, int speed, String name) {
+    public Monster() {
         Random r = new Random();
-        this.armor = r.nextInt(armour) + 1;
-        this.damage = r.nextInt(damage) + 1;
-        this.life = r.nextInt(life) + 1;
-        this.speed = r.nextInt(speed) + 1;
-        this.name = name.isBlank() ? Util.getRandomName() : name;
-        this.itens = new ArrayList<>();
+        this.name = Util.getRandomName();
+        this.life = r.nextInt(100) + 1;
+        this.speed = r.nextInt(10) + 1;
+        this.damage = r.nextInt(10) + 1;
+        this.protection = r.nextInt(10) + 1;
+        this.items = new ArrayList<>();
         this.armors = new ArrayList<>();
         this.weapons = new ArrayList<>();
     }
@@ -49,29 +49,51 @@ class Monster {
     }
 
     int getTotalArmour() {
-        int totalArmor = this.armor;
+        int temp = this.protection;
         for (Item item : this.armors) {
-            totalArmor += item.getArmor(this.armor);
+            temp += item.getArmor();
         }
         for (Item item : this.weapons) {
-            totalArmor += item.getArmor(this.armor);
+            temp += item.getArmor();
         }
-        return totalArmor;
+        return temp;
+    }
+
+    int getTotalArmour(ProtectionType type) {
+        int temp = this.protection;
+        for (Item item : this.armors) {
+            temp += item.getArmor(type);
+        }
+        for (Item item : this.weapons) {
+            temp += item.getArmor(type);
+        }
+        return temp;
     }
 
     int getTotalDamage() {
-        int totalDamage = this.damage;
+        int temp = this.damage;
         for (Item item : this.armors) {
-            totalDamage += item.getDamage(this.damage);
+            temp += item.getDamage();
         }
         for (Item item : this.weapons) {
-            totalDamage += item.getDamage(this.damage);
+            temp += item.getDamage();
         }
-        return totalDamage;
+        return temp;
+    }
+
+    int getTotalDamage(DamageType type) {
+        int temp = this.damage;
+        for (Item item : this.armors) {
+            temp += item.getDamage(type);
+        }
+        for (Item item : this.weapons) {
+            temp += item.getDamage(type);
+        }
+        return temp;
     }
 
     boolean getItem(Item item) {
-        return this.itens.add(item);
+        return this.items.add(item);
     }
 
     boolean equipItem(Item item) {
@@ -79,7 +101,7 @@ class Monster {
         if (isArmor) {
             Armor a = (Armor) item;
             for (Armor armor : this.armors) {
-                if (a.armorType == armor.armorType) {
+                if (a.type == armor.type) {
                     return false;
                 }
             }
@@ -87,18 +109,18 @@ class Monster {
             return true;
         } else {
             Weapon i = (Weapon) item;
-            if ((i.weaponType == WeaponType.Bow || i.weaponType == WeaponType.CrossBow)
-                    && this.monsterType != MonsterType.Archer) {
+            if ((i.type == WeaponType.Bow || i.type == WeaponType.CrossBow)
+                    && this.type != MonsterType.Archer) {
                 return false;
-            } else if ((i.weaponType == WeaponType.HeavyAxe || i.weaponType == WeaponType.HeavySword
-                    || i.weaponType == WeaponType.HeavyMace || i.weaponType == WeaponType.HeavyFlail)
-                    && this.monsterType != MonsterType.Warrior) {
+            } else if ((i.type == WeaponType.HeavyAxe || i.type == WeaponType.HeavySword
+                    || i.type == WeaponType.HeavyMace || i.type == WeaponType.HeavyFlail)
+                    && this.type != MonsterType.Warrior) {
                 return false;
-            } else if ((i.weaponType == WeaponType.Staff || i.weaponType == WeaponType.Wand)
-                    && this.monsterType != MonsterType.Mage) {
+            } else if ((i.type == WeaponType.Staff || i.type == WeaponType.Wand)
+                    && this.type != MonsterType.Mage) {
                 return false;
-            } else if ((i.weaponType == WeaponType.Claws || i.weaponType == WeaponType.Shuriken)
-                    && this.monsterType != MonsterType.Ninja) {
+            } else if ((i.type == WeaponType.Claws || i.type == WeaponType.Shuriken)
+                    && this.type != MonsterType.Ninja) {
                 return false;
             }
             this.weapons.add(i);
@@ -106,43 +128,59 @@ class Monster {
         }
     }
 
-    String getWeaponsNames() {
-        String weapons = "";
-        for (Item item : this.itens) {
-            boolean isWeapon = item.getClass().getName().equals("Weapon");
-            weapons += isWeapon ? (weapons.isEmpty() ? "" : ",") + item.name : "";
+    String getArmorsNames() {
+        String items = "";
+        for (Item item : this.armors) {
+            items += items.isEmpty() ? "" : "," + item.name;
         }
-        return weapons;
+        return items;
+    }
+
+    String getWeaponsNames() {
+        String items = "";
+        for (Item item : this.weapons) {
+            items += items.isEmpty() ? "" : "," + item.name;
+        }
+        return items;
     }
 
     String getItemsNames() {
-        String weapons = "";
-        for (Item item : this.itens) {
-            weapons += weapons.isEmpty() ? "" : "," + item.name;
+        String items = "";
+        for (Item item : this.items) {
+            items += items.isEmpty() ? "" : "," + item.name;
         }
-        return weapons;
+        return items;
     }
 
     public JSONObject getJson() {
         JSONObject monster = new JSONObject();
+        JSONArray armors = new JSONArray();
+        JSONArray weapons = new JSONArray();
         JSONArray itens = new JSONArray();
         monster.put("name", this.name);
         monster.put("life", this.life);
-        monster.put("armour", this.armor);
-        monster.put("damage", this.damage);
+        monster.put("totalProtection", this.getTotalArmour());
         monster.put("totalDamage", this.getTotalDamage());
         monster.put("speed", this.speed);
-        for (Item item : this.itens) {
+        for (Item item : this.items) {
             itens.put(item.name);
         }
+        for (Item item : this.armors) {
+            armors.put(item.name);
+        }
+        for (Item item : this.weapons) {
+            weapons.put(item.name);
+        }
         monster.put("itens", itens);
+        monster.put("armors", armors);
+        monster.put("weapons", weapons);
         return monster;
     }
 
     @Override
     public String toString() {
         String text = "Name: " + this.name + " (" + this.life + " + " + this.getTotalArmour() + ")\n";
-        text += "Damage: " + this.damage + " (" + this.getTotalDamage() + " | " + this.speed + "x)\n";
+        text += "Damage: " + this.getTotalDamage() + " | " + this.speed + "x\n";
         text += "Weapons: " + this.getWeaponsNames();
         return text;
     }
