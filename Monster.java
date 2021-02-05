@@ -162,7 +162,7 @@ class Monster {
     String getArmorsNames() {
         String items = "";
         for (Item item : this.armors) {
-            items += items.isEmpty() ? "" : "," + item.name;
+            items += items.isEmpty() ? item.name : "," + item.name;
         }
         return items;
     }
@@ -170,7 +170,7 @@ class Monster {
     String getWeaponsNames() {
         String items = "";
         for (Item item : this.weapons) {
-            items += items.isEmpty() ? "" : "," + item.name;
+            items += items.isEmpty() ? item.name : "," + item.name;
         }
         return items;
     }
@@ -178,7 +178,7 @@ class Monster {
     String getItemsNames() {
         String items = "";
         for (Item item : this.items) {
-            items += items.isEmpty() ? "" : "," + item.name;
+            items += items.isEmpty() ? item.name : "," + item.name;
         }
         return items;
     }
