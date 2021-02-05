@@ -9,10 +9,14 @@ class Test {
         Weapon w2 = new Weapon();
         Weapon w3 = new Weapon();
         Armor a1 = new Armor();
+        Armor a2 = new Armor();
         m1.items.add(w1);
         m2.items.add(w2);
         m1.items.add(w3);
         m1.items.add(a1);
+        m2.items.add(a2);
+        m1.equipItem(w3);
+        m2.equipItem(a2);
 
         while (true) {
             System.out.println();
